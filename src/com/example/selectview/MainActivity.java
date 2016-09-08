@@ -1,16 +1,44 @@
 package com.example.selectview;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
-
+	
+	private Firebase myFirebaseRef;
+	private TextView tvScene;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Firebase.setAndroidContext(this);
+		
 		setContentView(R.layout.activity_main);
+		
+		tvScene = (TextView)findViewById(R.id.tv_scene);
+		
+		
+		// 파이어 베이스 주소 Set
+        myFirebaseRef = new Firebase("https://bluetoothscan.firebaseio.com/");
+ 
+        //파이어 베이스 Value 가져오기
+        myFirebaseRef.getRoot().addValueEventListener(new ValueEventListener() {
+			  @Override
+			  public void onDataChange(DataSnapshot snapshot) {
+				  tvScene.setText(snapshot.getValue().toString());
+			  }
+			  @Override public void onCancelled(FirebaseError error) { }
+		});
+        
 	}
 
 	@Override
